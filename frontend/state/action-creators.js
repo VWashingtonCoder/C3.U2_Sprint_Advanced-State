@@ -12,11 +12,12 @@ import {
 
 // ❗ You don't need to add extra action creators to achieve MVP
 // Wheel State
-export function moveClockwise([newWheel]) { 
-  console.log(newWheel)
-  return { type: MOVE_CLOCKWISE, payload: [newWheel] }
+export function moveClockwise(id) { 
+  return { type: MOVE_CLOCKWISE, payload: id}
 }
-export function moveCounterClockwise() { }
+export function moveCounterClockwise(id) { 
+  return { type: MOVE_COUNTERCLOCKWISE, payload: id }
+}
 
 // Answer State
 export function selectAnswer() { }

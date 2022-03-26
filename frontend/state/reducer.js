@@ -11,11 +11,13 @@ import {
   RESET_FORM
 } from './action-types'
 
-const initialWheelState = ["cog active", "cog", "cog", "cog", "cog", "cog"]
+const initialWheelState = 0
 function wheel(state = initialWheelState, action) {
   switch(action.type){
     case MOVE_CLOCKWISE:
-      return state, [action.payload]
+      return action.payload
+    case MOVE_COUNTERCLOCKWISE:
+      return action.payload
     default:
       return state
   }

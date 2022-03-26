@@ -1,17 +1,25 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as actionCreators from "../state/action-creators"
 
 function Quiz(props) {
   const { quiz, fetchQuiz } = props
+  const [quizAnswers, setQuizAnswers] = useState([])
   
   useEffect(() => {
     fetchQuiz()
   }, [])
 
+  useEffect(() => {
+    const answers = document.getElementsByClassName("answer")
+    console.log(answers)
+  })
   
-  console.log(quiz)
-  
+
+  const select = evt => {
+    console.log(evt)
+  } 
+  console.log(quizAnswers)
   return (
     <div id="wrapper">
       {
@@ -23,14 +31,14 @@ function Quiz(props) {
             <div id="quizAnswers">
               <div className="answer selected">
                 {quiz.correctAnswer}
-                <button>
+                <button id="correct-btn" onClick={select}>
                   SELECTED
                 </button>
               </div>
 
               <div className="answer">
                 {quiz.wrongAnswer}
-                <button>
+                <button id='wrong-btn' onClick={select}>
                   Select
                 </button>
               </div>
