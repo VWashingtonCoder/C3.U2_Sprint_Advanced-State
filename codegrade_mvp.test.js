@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, screen } from '@testing-library/react'
+import { render, fireEvent, screen, waitFor, userEvent } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { setupServer, getHandlers } from './backend/mock-server'
 import App, { resetStore } from './frontend/components/App'
@@ -192,22 +192,32 @@ describe('Advanced State Sprint Challenge Submission', () => {
     })
     test(`[11] The submit button is disabled until all inputs have values more than one character
         in length after trimming leading and trailing whitespace
-    `, () => {
+    `, async() => {
       expect(submitNewQuizBtn()).toBeDisabled()
       fireEvent.change(newQuestionInput(), { target: { value: 'question' } })
       expect(submitNewQuizBtn()).toBeDisabled()
       fireEvent.change(newTrueAnswerInput(), { target: { value: 'true' } })
       expect(submitNewQuizBtn()).toBeDisabled()
       fireEvent.change(newFalseAnswerInput(), { target: { value: 'false' } })
-      expect(submitNewQuizBtn()).toBeEnabled()
+      await waitFor(() => {
+        expect(submitNewQuizBtn()).toBeEnabled()
+      })
       fireEvent.change(newQuestionInput(), { target: { value: '   ' } })
-      expect(submitNewQuizBtn()).toBeDisabled()
+      await waitFor(() => {
+        expect(submitNewQuizBtn()).toBeDisabled()
+      })
       fireEvent.change(newQuestionInput(), { target: { value: '  question  ' } })
-      expect(submitNewQuizBtn()).toBeEnabled()
+      await waitFor(() => {
+        expect(submitNewQuizBtn()).toBeEnabled()
+      })
       fireEvent.change(newTrueAnswerInput(), { target: { value: '   ' } })
-      expect(submitNewQuizBtn()).toBeDisabled()
+      await waitFor(() => {
+        expect(submitNewQuizBtn()).toBeDisabled()
+      })
       fireEvent.change(newTrueAnswerInput(), { target: { value: '  true  ' } })
+      await waitFor(() => {
       expect(submitNewQuizBtn()).toBeEnabled()
+      })
     })
     test(`[12] Successful submit of new quiz
         - Displays the correct success message at the top of the screen
@@ -216,7 +226,11 @@ describe('Advanced State Sprint Challenge Submission', () => {
       fireEvent.change(newQuestionInput(), { target: { value: 'foobarbaz?' } })
       fireEvent.change(newTrueAnswerInput(), { target: { value: 'bar' } })
       fireEvent.change(newFalseAnswerInput(), { target: { value: 'baz' } })
+      await waitFor(() => {
+        expect(submitNewQuizBtn()).toBeEnabled()
+      })
       fireEvent.click(submitNewQuizBtn())
+      
       await screen.findByText('Congrats: "foobarbaz?" is a great question!', queryOptions, waitForOptions)
       expect(newQuestionInput()).toHaveValue('')
       expect(newTrueAnswerInput()).toHaveValue('')
@@ -228,10 +242,13 @@ describe('Advanced State Sprint Challenge Submission', () => {
       fireEvent.change(newQuestionInput(), { target: { value: 'foobarbaz?' } })
       fireEvent.change(newTrueAnswerInput(), { target: { value: 'bar' } })
       fireEvent.change(newFalseAnswerInput(), { target: { value: 'baz' } })
+      await waitFor(() => {
+        expect(submitNewQuizBtn()).toBeEnabled()
+      })
       fireEvent.click(submitNewQuizBtn())
       await screen.findByText('Congrats: "foobarbaz?" is a great question!', queryOptions, waitForOptions)
       fireEvent.click(quizLink())
-      await screen.findByText(WhatIsClosure, queryOptions, waitForOptions)
+      await screen.findByText(WhatIsClosure, queryOptions, waitForOptions);
       let answerA = screen.queryByText(AFunction, queryOptions)
       fireEvent.click(answerA.querySelector('button'))
       fireEvent.click(submitAnswerBtn())

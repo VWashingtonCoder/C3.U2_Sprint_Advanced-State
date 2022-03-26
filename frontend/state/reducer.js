@@ -11,14 +11,11 @@ import {
   RESET_FORM
 } from './action-types'
 
-const initialWheelState = 0
+const initialWheelState = ["cog active", "cog", "cog", "cog", "cog", "cog"]
 function wheel(state = initialWheelState, action) {
   switch(action.type){
     case MOVE_CLOCKWISE:
-      return ({
-        ...state, 
-        wheel: state.wheel+1
-      })
+      return state, [action.payload]
     default:
       return state
   }
@@ -26,7 +23,21 @@ function wheel(state = initialWheelState, action) {
 
 const initialQuizState = null
 function quiz(state = initialQuizState, action) {
-  return state
+  switch(action.type){
+    case SET_QUIZ_INTO_STATE: return {
+      question: action.payload.question,
+      correctAnswer: action.payload.answers[0].text,
+      wrongAnswer: action.payload.answers[1].text 
+    }
+    case RESET_FORM: return { 
+      ...state,
+      question: action.payload.question, 
+      correctAnswer: action.payload.answers[0].text,
+      wrongAnswer: action.payload.answers[1].text
+    }
+    default:
+      return state
+  }
 }
 
 const initialSelectedAnswerState = null
@@ -34,11 +45,21 @@ function selectedAnswer(state = initialSelectedAnswerState, action) {
   return state
 }
 
+// Message State
 const initialMessageState = ''
 function infoMessage(state = initialMessageState, action) {
-  return state
+  switch(action.type){
+    case SET_INFO_MESSAGE:
+      return action.payload
+    case RESET_FORM:
+      return `Congrats: "${action.payload.question}" is a great question!`
+    default:
+      return state
+  }
+  
 }
 
+// Form State
 const initialFormState = {
   newQuestion: '',
   newTrueAnswer: '',

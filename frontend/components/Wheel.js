@@ -6,28 +6,40 @@ export function Wheel(props) {
   // console.log(props)
   const { wheel, moveClockwise, moveCounterClockwise } = props
   
-  const cogs = document.getElementsByClassName("cog")
-  
   const clockwiseClick = evt => {
     evt.preventDefault()
-    moveClockwise()
-  }
-
-  for (let i = 0; i < cogs.length; i++){
-    let current = document.getElementsByClassName("active")
-    if (cogs[i] === current){
-      console.log(i)
+    let currentId = wheel.indexOf("cog active")
+    if(currentId < wheel.length){
+      wheel.splice([currentId], 1, "cog")
+      wheel.splice([currentId+1], 1, "cog active")
+    } else if (currentId === wheel.length) {
+      wheel.splice([currentId], 1, "cog")
+      wheel.splice(0, 1, "cog active")
     }
+    
+    
+    
+    moveClockwise([wheel])
   }
+  const clickCounterClockwise = evt => {
+    // evt.preventDefault()
+    // let currentId = wheel.indexOf("cog active")
+    // wheel.splice([currentId], 1, "cog")
+    // wheel.splice([currentId+1], 1, "cog active")
+    // moveClockwise([wheel])
+  }
+  console.log(wheel)
   return (
     <div id="wrapper">
       <div id="wheel">
-        <div className="cog active" style={{ "--i": 0 }}>B</div>
-        <div className="cog" style={{ "--i": 1 }}></div>
-        <div className="cog" style={{ "--i": 2 }}></div>
-        <div className="cog" style={{ "--i": 3 }}></div>
-        <div className="cog" style={{ "--i": 4 }}></div>
-        <div className="cog" style={{ "--i": 5 }}></div>{/* --i is a custom CSS property, no need to touch that nor the style object */}
+        {wheel.map((cog, id) => {
+          return(
+            <div key={id} className={cog} style={{ "--i": id }}>
+              {cog === "cog active" ? "B" : ""}
+            </div>
+          ) 
+        })}
+        {/* --i is a custom CSS property, no need to touch that nor the style object */}
       </div>
       <div id="keypad">
         <button id="counterClockwiseBtn" >Counter clockwise</button>

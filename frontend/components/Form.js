@@ -1,13 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as actionCreators from '../state/action-creators'
+import formSchema from '../validation/formSchema'
+import * as yup from "yup"
 
 export function Form(props) {
-  console.log(props)
-  const { form, inputChange, postQuiz } = props
+  const [disabled, setDisabled] = useState(true)
+  const { form, inputChange, postQuiz, setMessage } = props
   
+  const validate = (id, value) => {
+    yup.reach(formSchema, id)
+      .validate(value)
+      .then(() => setMessage(""))
+      .catch(err => {
+        console.log(err.errors[0])
+        setMessage(err.errors[0])
+      })
+  }
+
   const onChange = evt => {
     const { id, value } = evt.target
+    validate(id, value)
     inputChange({ id, value })
   }
 
@@ -19,23 +32,22 @@ export function Form(props) {
       "false_answer_text": form.newFalseAnswer
     }
     postQuiz(newData)
-    console.log(newData)
   }
-  console.log(form)
-  console.log(form.newQuestion)
-
-  function validateForm() {
-    let form = document.getElementById("form")
-    console.log(form)
+  const disableCheck = () => {
+    formSchema.isValid(form).then(disabled => setDisabled(!disabled))
   }
-  validateForm()
+  
+  useEffect(() => {
+    disableCheck()
+  },[form])
+  
   return (
     <form id="form" onSubmit={onSubmit}>
       <h2>Create New Quiz</h2>
       <input maxLength={50} onChange={onChange} id="newQuestion" placeholder="Enter question" value={form.newQuestion}/>
       <input maxLength={50} onChange={onChange} id="newTrueAnswer" placeholder="Enter true answer" value={form.newTrueAnswer}/>
       <input maxLength={50} onChange={onChange} id="newFalseAnswer" placeholder="Enter false answer" value={form.newFalseAnswer} />
-      <button id="submitNewQuizBtn">Submit new quiz</button>
+      <button disabled={disabled} id="submitNewQuizBtn">Submit new quiz</button>
     </form>
   )
 }

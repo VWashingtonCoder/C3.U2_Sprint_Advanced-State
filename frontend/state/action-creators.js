@@ -12,17 +12,23 @@ import {
 
 // ❗ You don't need to add extra action creators to achieve MVP
 // Wheel State
-export function moveClockwise() { 
-  return { type: MOVE_CLOCKWISE }
+export function moveClockwise([newWheel]) { 
+  console.log(newWheel)
+  return { type: MOVE_CLOCKWISE, payload: [newWheel] }
 }
-
 export function moveCounterClockwise() { }
+
 // Answer State
 export function selectAnswer() { }
+
 // Message State
-export function setMessage() { }
+export function setMessage(value) { 
+  return { type: SET_INFO_MESSAGE, payload: value }
+}
+
 // Quiz State
 export function setQuiz() { }
+
 // Form State
 export function inputChange({ id, value }) {  
   return { type: INPUT_CHANGE, payload: { id, value } }
@@ -40,9 +46,11 @@ export function fetchQuiz() {
     axios.get("http://localhost:9000/api/quiz/next")
       .then(res=>{
         console.log(res)
+        dispatch({ type: SET_QUIZ_INTO_STATE, payload: res.data })
       })
       .catch(err => {
         console.log(err)
+        
       })
   }
 }
@@ -64,10 +72,10 @@ export function postQuiz(form) {
     axios.post('http://localhost:9000/api/quiz/new', form)
     .then(res => {
       console.log(res)
-      dispatch({ type: RESET_FORM })
+      dispatch({ type: RESET_FORM, payload: res.data })
     })
     .catch(err => {
-      console.log(err)
+      dispatch({ type: SET_INFO_MESSAGE, payload: err.response.data.message })
     })
   }
 }
