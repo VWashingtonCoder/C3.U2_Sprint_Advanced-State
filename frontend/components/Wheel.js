@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import * as actionCreators from '../state/action-creators'
 
 export function Wheel(props) {
-  // console.log(props)
   const { wheel, moveClockwise, moveCounterClockwise, } = props
 
   const cogs = document.getElementsByClassName('cog')
@@ -59,14 +58,3 @@ export function Wheel(props) {
 }
 
 export default connect(st => st, actionCreators)(Wheel)
-
-
- {/* {
-        wheelArr.map((cog, id) => {
-          return(
-            <div key={id} className={cog} style={{ "--i": id }}>
-              {cog === "cog active" ? "B" : ""}
-            </div>
-          )
-        })
-        }         */}
