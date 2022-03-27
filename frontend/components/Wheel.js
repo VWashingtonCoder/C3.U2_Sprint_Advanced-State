@@ -1,62 +1,53 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as actionCreators from '../state/action-creators'
-import Quiz from './Quiz'
-
-const initialWheelArr = ['cog active', 'cog', 'cog', 'cog', 'cog', 'cog']
 
 export function Wheel(props) {
   // console.log(props)
-  const { moveClockwise, moveCounterClockwise } = props
-  const [wheelArr, setWheelArr] = useState(initialWheelArr)
-  const [currentId, setCurrentID] = useState(0)
+  const { wheel, moveClockwise, moveCounterClockwise, } = props
 
-  const clockwiseClick = evt => {
-    evt.preventDefault()
-    if(currentId < 5){
-      wheelArr.splice(currentId, 1, "cog")
-      wheelArr.splice([currentId+1], 1, "cog active")
-      setWheelArr(wheelArr)
-      setCurrentID(currentId + 1)
-      moveClockwise(currentId + 1)
-    } else if (currentId === 5){
-      wheelArr.splice(5, 1, "cog")
-      wheelArr.splice(0, 1, "cog active")
-      setWheelArr(wheelArr)
-      setCurrentID(0)
+  const cogs = document.getElementsByClassName('cog')
+  console.log(cogs)
+
+  const clockwiseClick = () => {
+    if (wheel < 5) {
+      moveClockwise(wheel + 1)
+    } else if (wheel === 5) {
       moveClockwise(0)
     }
   }
   
-  const clickCounterClockwise = evt => {
-    evt.preventDefault()
-    if(currentId > 0){
-      wheelArr.splice(currentId, 1, "cog")
-      wheelArr.splice([currentId-1], 1, "cog active")
-      setWheelArr(wheelArr)
-      setCurrentID(currentId - 1)
-      moveCounterClockwise(currentId - 1)
-    } else if (currentId === 0){
-      wheelArr.splice(0, 1, "cog")
-      wheelArr.splice(5, 1, "cog active")
-      setWheelArr(wheelArr)
-      setCurrentID(5)
+  const clickCounterClockwise = () => {
+    if(wheel === 0) {
       moveCounterClockwise(5)
+    } else if (wheel > 0){
+      moveCounterClockwise(wheel - 1)
     }
   }
 
   return (
     <div id="wrapper">
       <div id="wheel">
-        {
-        wheelArr.map((cog, id) => {
-          return(
-            <div key={id} className={cog} style={{ "--i": id }}>
-              {cog === "cog active" ? "B" : ""}
+            <div className={wheel === 0 ? "cog active" : "cog"} style={{ "--i": 0 }}> 
+              {wheel === 0 ? "B" : ""} 
             </div>
-          )
-        })
-        }        
+            <div className={wheel === 1 ? "cog active" : "cog"} style={{ "--i": 1 }}> 
+              {wheel === 1 ? "B" : ""} 
+            </div>
+            <div className={wheel === 2 ? "cog active" : "cog"} style={{ "--i": 2 }}> 
+              {wheel === 2 ? "B" : ""} 
+            </div>
+            <div className={wheel === 3 ? "cog active" : "cog"} style={{ "--i": 3 }}>
+              {wheel === 3 ? "B" : ""}
+            </div>
+            <div className={wheel === 4 ? "cog active" : "cog"} style={{ "--i": 4 }}>
+              {wheel === 4 ? "B" : ""}
+            </div>
+            <div className={wheel === 5 ? "cog active" : "cog"} style={{ "--i": 5 }}>
+              {wheel === 5 ? "B" : ""}
+            </div>
+          
+       
         {/* --i is a custom CSS property, no need to touch that nor the style object */}
       </div>
       <div id="keypad">
@@ -70,9 +61,12 @@ export function Wheel(props) {
 export default connect(st => st, actionCreators)(Wheel)
 
 
-// <div id="cog 0" className='cog active' style={{ "--i": 0 }}>B</div>
-//         <div id="cog 1" className='cog' style={{ "--i": 1 }}></div>
-//         <div id="cog 2" className='cog' style={{ "--i": 2 }}></div>
-//         <div id="cog 3" className='cog' style={{ "--i": 3 }}></div>
-//         <div id="cog 4" className='cog' style={{ "--i": 4 }}></div>
-//         <div id="cog 5" className='cog' style={{ "--i": 5 }}></div>
+ {/* {
+        wheelArr.map((cog, id) => {
+          return(
+            <div key={id} className={cog} style={{ "--i": id }}>
+              {cog === "cog active" ? "B" : ""}
+            </div>
+          )
+        })
+        }         */}
