@@ -24,10 +24,18 @@ function wheel(state = initialWheelState, action) {
   }
 }
 
-const initialQuizState = null
+const initialQuizState = {
+  quizId: "DZ1Ej",
+  question: "What is a closure?",
+  correctAnswer: "A function plus its bindings",
+  correctAnswerId: "Oel8S",
+  wrongAnswer: "Clearly some kind of elephant",
+  wrongAnswerId: "YxGvQ"
+}
 function quiz(state = initialQuizState, action) {
   switch(action.type){
     case SET_QUIZ_INTO_STATE: return {
+      ...state,
       quizId: action.payload.quiz_id,
       question: action.payload.question,
       correctAnswer: action.payload.answers[0].text,
@@ -50,7 +58,6 @@ const initialSelectedAnswerState = ''
 function selectedAnswer(state = initialSelectedAnswerState, action) {
   switch(action.type){
     case SET_SELECTED_ANSWER:
-      console.log(action.payload)
       return action.payload
     default:
       return state

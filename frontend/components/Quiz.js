@@ -4,10 +4,7 @@ import * as actionCreators from "../state/action-creators"
 
 function Quiz(props) {
   const { quiz, fetchQuiz, postAnswer, selectAnswer, selectedAnswer } = props
-
-  useEffect(() => {
-    fetchQuiz()
-  }, [])
+  const [disabled, setDisabled] = useState(true)
 
   const select = evt => {
     const answers = document.getElementsByClassName("answer")
@@ -23,6 +20,8 @@ function Quiz(props) {
       wrong.classList.add("selected")
       selectAnswer(wrongId)
     }
+
+    setDisabled(false)
   } 
   
   const submit = evt => {
@@ -60,7 +59,13 @@ function Quiz(props) {
               </div>
             </div>
 
-            <button id="submitAnswerBtn" onClick={submit}>Submit answer</button>
+            <button 
+              id="submitAnswerBtn" 
+              disabled={disabled} 
+              onClick={submit}
+            >
+              Submit answer
+            </button>
           </>
         ) : 'Loading next quiz...'
       }

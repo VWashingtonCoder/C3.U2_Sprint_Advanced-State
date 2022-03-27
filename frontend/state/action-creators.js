@@ -22,7 +22,6 @@ export function moveCounterClockwise(id) {
 
 // Answer State
 export function selectAnswer(id) { 
-  console.log(id)
   return { type: SET_SELECTED_ANSWER, payload: id }
 }
 
