@@ -6,7 +6,8 @@ import {
   SET_SELECTED_ANSWER,
   SET_INFO_MESSAGE,
   INPUT_CHANGE,
-  RESET_FORM
+  RESET_FORM,
+  POST_ANSWER
 } from './action-types'
 
 
@@ -20,7 +21,10 @@ export function moveCounterClockwise(id) {
 }
 
 // Answer State
-export function selectAnswer() { }
+export function selectAnswer(id) { 
+  console.log(id)
+  return { type: SET_SELECTED_ANSWER, payload: id }
+}
 
 // Message State
 export function setMessage(value) { 
@@ -46,22 +50,28 @@ export function fetchQuiz() {
     // - Dispatch an action to send the obtained quiz to its state
     axios.get("http://localhost:9000/api/quiz/next")
       .then(res=>{
-        console.log(res)
         dispatch({ type: SET_QUIZ_INTO_STATE, payload: res.data })
       })
-      .catch(err => {
-        console.log(err)
+      .catch(res => {
+        console.log(res)
         
       })
   }
 }
 //Answer & Messgage State
-export function postAnswer() {
+export function postAnswer(choice) {
   return function (dispatch) {
     // On successful POST:
     // - Dispatch an action to reset the selected answer state
     // - Dispatch an action to set the server message to state
     // - Dispatch the fetching of the next quiz
+    axios.post("http://localhost:9000/api/quiz/answer", choice)
+      .then(res =>{
+        dispatch({ type: POST_ANSWER, payload: res.data.message})
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 // Form State
@@ -72,7 +82,6 @@ export function postQuiz(form) {
     // - Dispatch the resetting of the form
     axios.post('http://localhost:9000/api/quiz/new', form)
     .then(res => {
-      console.log(res)
       dispatch({ type: RESET_FORM, payload: res.data })
     })
     .catch(err => {

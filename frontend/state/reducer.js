@@ -8,7 +8,8 @@ import {
   SET_SELECTED_ANSWER,
   SET_INFO_MESSAGE,
   INPUT_CHANGE,
-  RESET_FORM
+  RESET_FORM,
+  POST_ANSWER
 } from './action-types'
 
 const initialWheelState = 0
@@ -27,9 +28,12 @@ const initialQuizState = null
 function quiz(state = initialQuizState, action) {
   switch(action.type){
     case SET_QUIZ_INTO_STATE: return {
+      quizId: action.payload.quiz_id,
       question: action.payload.question,
       correctAnswer: action.payload.answers[0].text,
-      wrongAnswer: action.payload.answers[1].text 
+      correctAnswerId: action.payload.answers[0].answer_id,
+      wrongAnswer: action.payload.answers[1].text,
+      wrongAnswerId: action.payload.answers[1].answer_id,
     }
     case RESET_FORM: return { 
       ...state,
@@ -42,9 +46,15 @@ function quiz(state = initialQuizState, action) {
   }
 }
 
-const initialSelectedAnswerState = null
+const initialSelectedAnswerState = ''
 function selectedAnswer(state = initialSelectedAnswerState, action) {
-  return state
+  switch(action.type){
+    case SET_SELECTED_ANSWER:
+      console.log(action.payload)
+      return action.payload
+    default:
+      return state
+  }
 }
 
 // Message State
@@ -55,6 +65,8 @@ function infoMessage(state = initialMessageState, action) {
       return action.payload
     case RESET_FORM:
       return `Congrats: "${action.payload.question}" is a great question!`
+    case POST_ANSWER:
+      return action.payload
     default:
       return state
   }
