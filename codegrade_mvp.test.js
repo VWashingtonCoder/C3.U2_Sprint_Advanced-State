@@ -172,7 +172,6 @@ describe('Advanced State Sprint Challenge Submission', () => {
       let answerA = screen.queryByText(AFunction, queryOptions)
       fireEvent.click(answerA.querySelector('button'))
       fireEvent.click(submitAnswerBtn())
-      screen.debug
       await screen.findByText(ThatIsCorrect, queryOptions)
     })
     test(`[9] Selecting and submitting an incorrect answer:
