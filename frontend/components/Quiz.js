@@ -6,17 +6,23 @@ function Quiz(props) {
   const { quiz, fetchQuiz, postAnswer, selectAnswer, selectedAnswer } = props
   const [disabled, setDisabled] = useState(true)
 
+  useEffect(() => {
+    fetchQuiz()
+  }, [])
+
   const select = evt => {
     const answers = document.getElementsByClassName("answer")
     const correct = answers.item(0)
     const wrong = answers.item(1)
     const correctId = quiz.correctAnswerId
     const wrongId = quiz.wrongAnswerId
-    
+
     if (evt.target.id  === "correct-btn"){
       correct.classList.add("selected")
+      wrong.classList.remove("selected")
       selectAnswer(correctId)
     } else if (evt.target.id === "wrong-btn") {
+      correct.classList.remove("selected")
       wrong.classList.add("selected")
       selectAnswer(wrongId)
     }

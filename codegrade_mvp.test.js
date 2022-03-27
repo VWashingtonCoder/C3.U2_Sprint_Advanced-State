@@ -134,11 +134,16 @@ describe('Advanced State Sprint Challenge Submission', () => {
       let answerA = screen.queryByText(AFunction, queryOptions)
       let answerB = screen.queryByText(AnElephant, queryOptions)
       fireEvent.click(answerA.querySelector('button'))
-      expect(answerA.className).toMatch(/selected/)
-      expect(answerB.className).not.toMatch(/selected/)
+      await waitFor(() => {
+        expect(answerA.className).toMatch(/selected/)
+        expect(answerB.className).not.toMatch(/selected/)
+      })
       fireEvent.click(answerB.querySelector('button'))
-      expect(answerA.className).not.toMatch(/selected/)
-      expect(answerB.className).toMatch(/selected/)
+      await waitFor(() =>{
+        expect(answerA.className).not.toMatch(/selected/)
+        expect(answerB.className).toMatch(/selected/)
+      })
+      
     })
     test(`[6] Selecting an answer adds the correct text to its button:
         - Changes the label of the button from "Select" to "SELECTED"
@@ -167,6 +172,7 @@ describe('Advanced State Sprint Challenge Submission', () => {
       let answerA = screen.queryByText(AFunction, queryOptions)
       fireEvent.click(answerA.querySelector('button'))
       fireEvent.click(submitAnswerBtn())
+      screen.debug
       await screen.findByText(ThatIsCorrect, queryOptions)
     })
     test(`[9] Selecting and submitting an incorrect answer:
