@@ -1,26 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as actionCreators from '../state/action-creators'
-import formSchema from '../validation/formSchema'
-import * as yup from "yup"
+
 
 export function Form(props) {
   const [disabled, setDisabled] = useState(true)
   const { form, inputChange, postQuiz, setMessage } = props
-  
-  const validate = (id, value) => {
-    yup.reach(formSchema, id)
-      .validate(value)
-      .then(() => setMessage(""))
-      .catch(err => {
-        console.log(err.errors[0])
-        setMessage(err.errors[0])
-      })
-  }
 
   const onChange = evt => {
     const { id, value } = evt.target
-    validate(id, value)
     inputChange({ id, value })
   }
 
@@ -34,13 +22,18 @@ export function Form(props) {
     postQuiz(newData)
   }
   const disableCheck = () => {
-    formSchema.isValid(form).then(disabled => setDisabled(!disabled))
+    form.newQuestion.trim().length > 1 
+    && form.newTrueAnswer.trim().length > 1 
+    && form.newFalseAnswer.trim().length > 1 
+      ? setDisabled(false) : setDisabled(true)
   }
   
   useEffect(() => {
     disableCheck()
   },[form])
   
+  console.log(form)
+  console.log(disabled)
   return (
     <form id="form" onSubmit={onSubmit}>
       <h2>Create New Quiz</h2>

@@ -197,32 +197,22 @@ describe('Advanced State Sprint Challenge Submission', () => {
     })
     test(`[11] The submit button is disabled until all inputs have values more than one character
         in length after trimming leading and trailing whitespace
-    `, async() => {
+    `, () => {
       expect(submitNewQuizBtn()).toBeDisabled()
       fireEvent.change(newQuestionInput(), { target: { value: 'question' } })
       expect(submitNewQuizBtn()).toBeDisabled()
       fireEvent.change(newTrueAnswerInput(), { target: { value: 'true' } })
       expect(submitNewQuizBtn()).toBeDisabled()
       fireEvent.change(newFalseAnswerInput(), { target: { value: 'false' } })
-      await waitFor(() => {
-        expect(submitNewQuizBtn()).toBeEnabled()
-      })
-      fireEvent.change(newQuestionInput(), { target: { value: '   ' } })
-      await waitFor(() => {
-        expect(submitNewQuizBtn()).toBeDisabled()
-      })
-      fireEvent.change(newQuestionInput(), { target: { value: '  question  ' } })
-      await waitFor(() => {
-        expect(submitNewQuizBtn()).toBeEnabled()
-      })
-      fireEvent.change(newTrueAnswerInput(), { target: { value: '   ' } })
-      await waitFor(() => {
-        expect(submitNewQuizBtn()).toBeDisabled()
-      })
-      fireEvent.change(newTrueAnswerInput(), { target: { value: '  true  ' } })
-      await waitFor(() => {
       expect(submitNewQuizBtn()).toBeEnabled()
-      })
+      fireEvent.change(newQuestionInput(), { target: { value: '   ' } })
+      expect(submitNewQuizBtn()).toBeDisabled()
+      fireEvent.change(newQuestionInput(), { target: { value: '  question  ' } })
+      expect(submitNewQuizBtn()).toBeEnabled()
+      fireEvent.change(newTrueAnswerInput(), { target: { value: '   ' } })
+      expect(submitNewQuizBtn()).toBeDisabled()
+      fireEvent.change(newTrueAnswerInput(), { target: { value: '  true  ' } })
+      expect(submitNewQuizBtn()).toBeEnabled()
     })
     test(`[12] Successful submit of new quiz
         - Displays the correct success message at the top of the screen
@@ -231,29 +221,22 @@ describe('Advanced State Sprint Challenge Submission', () => {
       fireEvent.change(newQuestionInput(), { target: { value: 'foobarbaz?' } })
       fireEvent.change(newTrueAnswerInput(), { target: { value: 'bar' } })
       fireEvent.change(newFalseAnswerInput(), { target: { value: 'baz' } })
-      await waitFor(() => {
-        expect(submitNewQuizBtn()).toBeEnabled()
-      })
       fireEvent.click(submitNewQuizBtn())
-      
       await screen.findByText('Congrats: "foobarbaz?" is a great question!', queryOptions, waitForOptions)
       expect(newQuestionInput()).toHaveValue('')
       expect(newTrueAnswerInput()).toHaveValue('')
       expect(newFalseAnswerInput()).toHaveValue('')
     })
     test(`[13] Successful submit of new quiz
-        - Adds the quiz to the roster of quizzes
+    - Adds the quiz to the roster of quizzes
     `, async () => {
       fireEvent.change(newQuestionInput(), { target: { value: 'foobarbaz?' } })
       fireEvent.change(newTrueAnswerInput(), { target: { value: 'bar' } })
       fireEvent.change(newFalseAnswerInput(), { target: { value: 'baz' } })
-      await waitFor(() => {
-        expect(submitNewQuizBtn()).toBeEnabled()
-      })
       fireEvent.click(submitNewQuizBtn())
       await screen.findByText('Congrats: "foobarbaz?" is a great question!', queryOptions, waitForOptions)
       fireEvent.click(quizLink())
-      await screen.findByText(WhatIsClosure, queryOptions, waitForOptions);
+      await screen.findByText(WhatIsClosure, queryOptions, waitForOptions)
       let answerA = screen.queryByText(AFunction, queryOptions)
       fireEvent.click(answerA.querySelector('button'))
       fireEvent.click(submitAnswerBtn())
@@ -268,8 +251,8 @@ describe('Advanced State Sprint Challenge Submission', () => {
       fireEvent.click(answerA.querySelector('button'))
       fireEvent.click(submitAnswerBtn())
       await screen.findByText('foobarbaz?', queryOptions, waitForOptions)
-    })
   })
+})
   describe('[APP STATE]', () => {
     test(`[14] The state of the wheel survives route changes:
         - Moving the wheel, navigating away and back, should keep the position of the "B"
